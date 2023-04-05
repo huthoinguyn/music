@@ -189,7 +189,7 @@ const app = {
   loadCurrentSong: function () {
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url('${this.currentSong.album.thumbnail_medium}')`;
-    audio.src = this.currentSong.source['128'];
+    audio.src = this.currentSong.source["128"];
   },
   loadConfig: function () {
     this.isRandom = this.config.isRandom;
@@ -274,4 +274,6 @@ const app = {
   },
 };
 
-app.start();
+window.addEventListener("DOMContentLoaded", function () {
+  app.start();
+});
