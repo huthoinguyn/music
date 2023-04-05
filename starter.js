@@ -7,7 +7,7 @@ const player = $(".player");
 const cd = $(".cd");
 const heading = $("header h2");
 const cdThumb = $(".cd-thumb");
-const audio = $("#audio");
+let audio = $("#audio");
 const playBtn = $(".btn-toggle-play");
 const progress = $("#progress");
 const prevBtn = $(".btn-prev");
@@ -15,11 +15,30 @@ const nextBtn = $(".btn-next");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
+const catList = $(".category");
 
 const app = {
-  endpoint:
-    "https://mp3.zing.vn/xhr/media/get-source?type=album&key=LmxnTZmadJinJlhtHybmZGyLhJHNkHHsx",
+  categories: [
+    {
+      name: "Vpop",
+      key: "LmxnTZmadJinJlhtHybmZGyLhJHNkHHsx",
+    },
+    {
+      name: "Usuk",
+      key: "kGJntZGsdJRncWiyGybnLnykCJmNbAAHJ",
+    },
+    {
+      name: "Kpop",
+      key: "ZGJHyknaBJininJtHtvnLHyLgcmabJdaQ",
+    },
+    {
+      name: "Rap",
+      key: "kmcHyLnNdJimxzRymyFmZHyZgJmaDclSZ",
+    },
+  ],
+  endpoint: "https://mp3.zing.vn/xhr/media/get-source?type=album&key=",
   currentIndex: 0,
+  catIndex: 0,
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
@@ -42,6 +61,16 @@ const app = {
   handleEvents: function () {
     const _this = this;
     const cdWidth = cd.offsetWidth;
+
+    catList.onclick = async function (e) {
+      e.stopPropagation();
+      if (e.target.matches(".cate-item")) {
+        _this.catIndex = +e.target.dataset.catId;
+        await _this.getMusic(_this.categories[_this.catIndex].key);
+        _this.render();
+        _this.loadCurrentSong();
+      }
+    };
 
     // Xử lý CD quay / dừng
     // Handle CD spins / stops
@@ -190,6 +219,7 @@ const app = {
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url('${this.currentSong.album.thumbnail_medium}')`;
     audio.src = this.currentSong.source["128"];
+    // audio.src = audioSrc;
   },
   loadConfig: function () {
     this.isRandom = this.config.isRandom;
@@ -218,8 +248,8 @@ const app = {
     this.currentIndex = newIndex;
     this.loadCurrentSong();
   },
-  getMusic: async function () {
-    const response = await fetch(this.endpoint);
+  getMusic: async function (key = "LmxnTZmadJinJlhtHybmZGyLhJHNkHHsx") {
+    const response = await fetch(`${this.endpoint}${key}`);
     const data = await response.json();
     this.songs = data.data.items;
   },
@@ -245,6 +275,14 @@ const app = {
                     `;
     });
     playlist.innerHTML = htmls.join("");
+    const cats = this.categories.map((cat, index) => {
+      return `
+      <div data-cat-id="${index}" class="cate-item ${
+        index === this.catIndex ? "active" : ""
+      }">${cat.name}</div>
+      `;
+    });
+    catList.innerHTML = cats.join("");
   },
   start: async function () {
     await this.getMusic();
