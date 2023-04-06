@@ -15,7 +15,12 @@ const nextBtn = $(".btn-next");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
-const catList = $(".category");
+const catList = $(".cat-list");
+const catBtn = $(".cat-btn");
+const searchBox = $("#searchBox");
+const searchIcon = $("#searchBox .search-icon");
+const timeLeft = $(".time.left");
+const timeRight = $(".time.right");
 
 const app = {
   categories: [
@@ -36,6 +41,8 @@ const app = {
       key: "kmcHyLnNdJimxzRymyFmZHyZgJmaDclSZ",
     },
   ],
+  // searchEndPoint:
+  //   "http://ac.mp3.zing.vn/complete?type=artist,song,key,code&num=500&query=",
   endpoint: "https://mp3.zing.vn/xhr/media/get-source?type=album&key=",
   currentIndex: 0,
   catIndex: 0,
@@ -70,6 +77,38 @@ const app = {
         _this.render();
         _this.loadCurrentSong();
       }
+    };
+
+    // searchBox.querySelector("input").onkeydown = async function (e) {
+    //   if (e.target.value !== "") {
+    //     console.log(e.target.value);
+    //     await _this.searchMusic();
+    //     _this.render();
+    //     // _this.loadCurrentSong();
+    //   } else {
+    //     await _this.getMusic(_this.categories[_this.catIndex].key);
+    //     _this.render();
+    //     _this.loadCurrentSong();
+    //   }
+    // };
+
+    // audio.onloadedmetadata = function () {
+    //   audio.ontimeupdate = () => {
+    //     let currentTime = audio.currentTime;
+    //     let min = Math.floor(currentTime / 60);
+    //     let sec = Math.floor(currentTime % 60);
+    //     if (min < 10) min = "0" + min;
+    //     if (sec < 10) sec = "0" + sec;
+    //     timeLeft.innerText = `${min}:${sec}`;
+    //   };
+    // };
+
+    catBtn.onclick = function () {
+      catList.classList.toggle("active");
+    };
+
+    searchIcon.onclick = function () {
+      searchBox.classList.toggle("active");
     };
 
     // Xử lý CD quay / dừng
@@ -125,6 +164,12 @@ const app = {
         );
         progress.value = progressPercent;
       }
+      let currentTime = audio.currentTime;
+      let min = Math.floor(currentTime / 60);
+      let sec = Math.floor(currentTime % 60);
+      if (min < 10) min = "0" + min;
+      if (sec < 10) sec = "0" + sec;
+      timeLeft.innerText = `${min}:${sec}`;
     };
 
     // Xử lý khi tua song
@@ -219,7 +264,8 @@ const app = {
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url('${this.currentSong.album.thumbnail_medium}')`;
     audio.src = this.currentSong.source["128"];
-    // audio.src = audioSrc;
+    let time = this.currentSong.duration;
+    timeRight.textContent = `${Math.floor(time / 60)}:${time % 60}`;
   },
   loadConfig: function () {
     this.isRandom = this.config.isRandom;
@@ -253,6 +299,12 @@ const app = {
     const data = await response.json();
     this.songs = data.data.items;
   },
+  // searchMusic: async function (key = "gió") {
+  //   const response = await fetch(`${this.searchEndPoint}${key}`);
+  //   const data = await response.json();
+  // this.songs = data.data.items;
+  //   console.log(data);
+  // },
   render: function () {
     const htmls = this.songs.map((song, index) => {
       return `

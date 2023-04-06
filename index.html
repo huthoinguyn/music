@@ -4,45 +4,33 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Music player</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
-    integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
-    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .category {
-      position: fixed;
-      top: 6px;
-      z-index: 99;
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-around;
-      gap: 4px;
-    }
-    
-    .category .cate-item {
-      border: 1px solid #eee;
-      padding: 6px 12px;
-      flex: 0 0 calc(25% - 4px);
-      max-width: 25%;
-      border-radius: 6px;
-      cursor: pointer;
-      text-align: center;
-    }
-    .category .cate-item.active{
-      border-color: #ff2323;
-      color: #ff2323;
-    }
-  </style>
+
 </head>
 
 <body>
 
   <div class="player">
-    <div class="category">
+    <div class="header">
+      <div class="category">
+        <div class="cat-btn">
+          <i class="fa-solid fa-bars-staggered"></i>
+        </div>
+        <div class="cat-list">
+
+        </div>
+      </div>
+      <div id="searchBox" class="search-box">
+        <input type="text" placeholder="Tìm bài hát..." />
+        <span class="search-icon">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
     </div>
     <!-- Dashboard -->
     <div class="dashboard">
@@ -77,8 +65,11 @@
           <i class="fas fa-random"></i>
         </div>
       </div>
-
-      <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+      <div class="duration">
+        <span class="time left">00:00</span>
+        <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+        <span class="time right">00:00</span>
+      </div>
 
       <audio id="audio" src=""></audio>
     </div>
